@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Chat - Hackathon Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .slides-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 80px;
+            text-align: center;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #22d3ee, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-shadow: 0 0 40px rgba(34, 211, 238, 0.3);
+        }
+
+        h2 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            color: #94a3b8;
+            margin-bottom: 60px;
+            font-weight: 400;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(34, 211, 238, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(34, 211, 238, 0.6);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #22d3ee;
+        }
+
+        .feature-desc {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 1000px;
+            margin-top: 60px;
+        }
+
+        .stat-box {
+            background: rgba(34, 211, 238, 0.1);
+            border: 2px solid #22d3ee;
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #22d3ee;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.3rem;
+            color: #cbd5e1;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 900px;
+            margin-top: 40px;
+        }
+
+        .tech-badge {
+            background: rgba(59, 130, 246, 0.2);
+            border: 2px solid #3b82f6;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #60a5fa;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(34, 211, 238, 0.2);
+            border: 2px solid #22d3ee;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            background: rgba(34, 211, 238, 0.4);
+            transform: scale(1.05);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            font-size: 1.2rem;
+            color: #94a3b8;
+            z-index: 1000;
+        }
+
+        .demo-highlight {
+            background: linear-gradient(135deg, #22d3ee, #3b82f6);
+            padding: 40px 60px;
+            border-radius: 20px;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 40px;
+            box-shadow: 0 0 60px rgba(34, 211, 238, 0.4);
+        }
+
+        .checkmark {
+            color: #22d3ee;
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+
+        ul {
+            text-align: left;
+            font-size: 1.5rem;
+            line-height: 2.5;
+            list-style: none;
+            max-width: 900px;
+        }
+
+        li {
+            margin-bottom: 20px;
+            padding-left: 60px;
+            position: relative;
+        }
+
+        li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #22d3ee;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="slides-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>Universal Chat</h1>
+            <div class="subtitle">Единая AI-платформа для всех задач</div>
+            <div class="demo-highlight">
+                🚀 4-минутное демо
+            </div>
+        </div>
+
+        <!-- Slide 2: Problem -->
+        <div class="slide">
+            <h2>Проблема</h2>
+            <div class="subtitle">5+ инструментов для работы</div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">😓</div>
+                    <div class="feature-title">Постоянное переключение</div>
+                    <div class="feature-desc">ChatGPT → Google Drive → Support → Gmail</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <div class="feature-title">Потеря времени</div>
+                    <div class="feature-desc">Копирование данных между системами</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤔</div>
+                    <div class="feature-title">Выбор инструмента</div>
+                    <div class="feature-desc">Какой AI использовать для задачи?</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📉</div>
+                    <div class="feature-title">Низкая эффективность</div>
+                    <div class="feature-desc">Разрозненные данные и контекст</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Solution -->
+        <div class="slide">
+            <h2>Решение</h2>
+            <div class="subtitle">Всё в одном месте с AI автоматизацией</div>
+            <ul>
+                <li>Автоматическое определение намерений</li>
+                <li>Умное переключение между агентами</li>
+                <li>Интеграция с Google Drive/Sheets/Gmail</li>
+                <li>Автоматизация поддержки</li>
+                <li>Самообучающиеся AI агенты</li>
+            </ul>
+        </div>
+
+        <!-- Slide 4: Core Features -->
+        <div class="slide">
+            <h2>🤖 Основные функции</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-title">Smart Context</div>
+                    <div class="feature-desc">AI понимает намерения и переключается автоматически</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <div class="feature-title">4 Агента</div>
+                    <div class="feature-desc">Код, Анализ, Письмо, Общение</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">5 AI Моделей</div>
+                    <div class="feature-desc">Gemini 3, 2.5 + GPT-5</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎙️</div>
+                    <div class="feature-title">Voice</div>
+                    <div class="feature-desc">ElevenLabs TTS прямо в чате</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Advanced Features -->
+        <div class="slide">
+            <h2>⚡ Расширенные функции</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📁</div>
+                    <div class="feature-title">MCP Tools</div>
+                    <div class="feature-desc">Google Drive, Sheets, Gmail через AI</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎫</div>
+                    <div class="feature-title">Auto Support</div>
+                    <div class="feature-desc">Тикеты с AI категоризацией</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <div class="feature-title">Self-Improving</div>
+                    <div class="feature-desc">Агенты учатся на фидбеке</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">Context Switch</div>
+                    <div class="feature-desc">Автоматическая смена агентов</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Stats -->
+        <div class="slide">
+            <h2>📊 Achievements</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Points / 37</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">48,65%</div>
+                    <div class="stat-label">Features</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Levels</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Tech Stack -->
+        <div class="slide">
+            <h2>🛠️ Технический стек</h2>
+            <div class="tech-stack">
+                <div class="tech-badge">React</div>
+                <div class="tech-badge">TypeScript</div>
+                <div class="tech-badge">Supabase</div>
+                <div class="tech-badge">Edge Functions</div>
+                <div class="tech-badge">Lovable AI</div>
+                <div class="tech-badge">Zapier MCP</div>
+                <div class="tech-badge">ElevenLabs</div>
+                <div class="tech-badge">TailwindCSS</div>
+                <div class="tech-badge">PostgreSQL</div>
+            </div>
+            <div class="subtitle" style="margin-top: 60px;">Modern, Scalable, Production-Ready</div>
+        </div>
+
+        <!-- Slide 8: Demo Time -->
+        <div class="slide">
+            <h2>🎬 Мое демо</h2>
+            <div class="demo-highlight">
+                Давайте продемонстрирую свой проект!
+            </div>
+        </div>
+
+        <!-- Slide 9: Thank You -->
+        <div class="slide">
+            <h1>Спасибо за внимание!</h1>
+            <div class="subtitle">Вопросы?</div>
+            <div style="margin-top: 60px; font-size: 1.5rem; color: #94a3b8;">
+                <p>Универсальный чат — искусственный интеллект, который подстраивается под вас</p>
+                <p style="margin-top: 20px; color: #22d3ee;">🚀 Готов к продакшену</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current">1</span> / <span id="total">9</span>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="prevSlide()">← Предыдущий слайд</button>
+        <button class="nav-btn" onclick="nextSlide()">Следующий слайд →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current').textContent = currentSlide + 1;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+    </script>
+</body>
+</html>
