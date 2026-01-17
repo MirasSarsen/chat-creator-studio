@@ -1,7 +1,20 @@
+# supabase/config.toml
 project_id = "fgrpfalsojggzkteqazr"
 
 [functions.chat]
 verify_jwt = false
 
 [functions.improve-agent]
+verify_jwt = false
+
+[functions.text-to-speech]
+verify_jwt = false
+
+[functions.mcp-tools]
+verify_jwt = false
+
+[functions.support-router]
+verify_jwt = false
+
+[functions.detect-intent]
 verify_jwt = false
