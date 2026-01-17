@@ -1,17 +1,24 @@
-import { Plus, MessageSquare, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Agent, DEFAULT_AGENTS } from "@/types/chat";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AgentImprover } from "./AgentImprover";
 
 interface ChatSidebarProps {
   selectedAgent: Agent;
   onSelectAgent: (agent: Agent) => void;
   onNewChat: () => void;
+  onPromptUpdate: (newPrompt: string) => void;
 }
 
-export function ChatSidebar({ selectedAgent, onSelectAgent, onNewChat }: ChatSidebarProps) {
+export function ChatSidebar({ 
+  selectedAgent, 
+  onSelectAgent, 
+  onNewChat,
+  onPromptUpdate 
+}: ChatSidebarProps) {
   return (
-    <div className="w-64 h-full flex flex-col bg-sidebar border-r border-sidebar-border">
+    <div className="w-72 h-full flex flex-col bg-sidebar border-r border-sidebar-border">
       {/* Header */}
       <div className="p-4 border-b border-sidebar-border">
         <h1 className="text-xl font-semibold gradient-text">Universal Chat</h1>
@@ -54,6 +61,14 @@ export function ChatSidebar({ selectedAgent, onSelectAgent, onNewChat }: ChatSid
               </div>
             </button>
           ))}
+        </div>
+
+        {/* Self-Improvement Section */}
+        <div className="mt-4 px-1">
+          <AgentImprover 
+            agent={selectedAgent} 
+            onPromptUpdate={onPromptUpdate}
+          />
         </div>
       </ScrollArea>
 

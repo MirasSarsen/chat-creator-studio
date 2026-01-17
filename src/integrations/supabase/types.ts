@@ -14,7 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agent_feedback: {
+        Row: {
+          agent_id: string
+          created_at: string
+          feedback_text: string | null
+          id: string
+          message_id: string
+          original_response: string
+          rating: number
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          feedback_text?: string | null
+          id?: string
+          message_id: string
+          original_response: string
+          rating: number
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          feedback_text?: string | null
+          id?: string
+          message_id?: string
+          original_response?: string
+          rating?: number
+        }
+        Relationships: []
+      }
+      agent_improvements: {
+        Row: {
+          agent_id: string
+          avg_rating_before: number | null
+          created_at: string
+          feedback_count: number
+          id: string
+          improved_prompt: string
+          improvement_reason: string | null
+          is_active: boolean
+          original_prompt: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          avg_rating_before?: number | null
+          created_at?: string
+          feedback_count?: number
+          id?: string
+          improved_prompt: string
+          improvement_reason?: string | null
+          is_active?: boolean
+          original_prompt: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          avg_rating_before?: number | null
+          created_at?: string
+          feedback_count?: number
+          id?: string
+          improved_prompt?: string
+          improvement_reason?: string | null
+          is_active?: boolean
+          original_prompt?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      conversation_logs: {
+        Row: {
+          agent_id: string
+          assistant_response: string
+          created_at: string
+          id: string
+          model_used: string
+          rating: number | null
+          user_message: string
+        }
+        Insert: {
+          agent_id: string
+          assistant_response: string
+          created_at?: string
+          id?: string
+          model_used: string
+          rating?: number | null
+          user_message: string
+        }
+        Update: {
+          agent_id?: string
+          assistant_response?: string
+          created_at?: string
+          id?: string
+          model_used?: string
+          rating?: number | null
+          user_message?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

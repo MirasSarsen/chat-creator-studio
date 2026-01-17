@@ -1,15 +1,16 @@
 import { Message } from "@/types/chat";
 import { User, Bot, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { FeedbackButtons } from "./FeedbackButtons";
 
 interface MessageBubbleProps {
   message: Message;
+  agentId?: string;
   onSpeak?: (text: string) => void;
   isSpeaking?: boolean;
 }
 
-export function MessageBubble({ message, onSpeak, isSpeaking }: MessageBubbleProps) {
+export function MessageBubble({ message, agentId, onSpeak, isSpeaking }: MessageBubbleProps) {
   const isUser = message.role === "user";
 
   return (
@@ -38,17 +39,26 @@ export function MessageBubble({ message, onSpeak, isSpeaking }: MessageBubblePro
         </div>
 
         {/* Actions for assistant messages */}
-        {!isUser && onSpeak && (
-          <div className="flex items-center gap-1 px-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 w-6 p-0 text-muted-foreground hover:text-primary"
-              onClick={() => onSpeak(message.content)}
-              disabled={isSpeaking}
-            >
-              <Volume2 className={`w-3.5 h-3.5 ${isSpeaking ? "animate-pulse text-primary" : ""}`} />
-            </Button>
+        {!isUser && (
+          <div className="flex items-center gap-2 px-1">
+            {onSpeak && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 w-6 p-0 text-muted-foreground hover:text-primary"
+                onClick={() => onSpeak(message.content)}
+                disabled={isSpeaking}
+              >
+                <Volume2 className={`w-3.5 h-3.5 ${isSpeaking ? "animate-pulse text-primary" : ""}`} />
+              </Button>
+            )}
+            {agentId && (
+              <FeedbackButtons
+                messageId={message.id}
+                agentId={agentId}
+                response={message.content}
+              />
+            )}
           </div>
         )}
       </div>

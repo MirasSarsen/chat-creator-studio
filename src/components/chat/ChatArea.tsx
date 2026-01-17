@@ -67,6 +67,7 @@ export function ChatArea({
               <MessageBubble
                 key={message.id}
                 message={message}
+                agentId={selectedAgent.id}
                 onSpeak={message.role === "assistant" ? onSpeak : undefined}
                 isSpeaking={isSpeaking}
               />
