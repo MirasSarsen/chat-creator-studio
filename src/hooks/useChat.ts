@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Message, Agent, AVAILABLE_MODELS, DEFAULT_AGENTS } from "@/types/chat";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
@@ -9,7 +10,19 @@ export function useChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState(AVAILABLE_MODELS[0].id);
   const [selectedAgent, setSelectedAgent] = useState<Agent>(DEFAULT_AGENTS[0]);
+  const [currentAgentPrompt, setCurrentAgentPrompt] = useState(DEFAULT_AGENTS[0].prompt);
   const { toast } = useToast();
+
+  // Update agent prompt when agent changes or when improvement is applied
+  const updateAgentPrompt = useCallback((newPrompt: string) => {
+    setCurrentAgentPrompt(newPrompt);
+  }, []);
+
+  // Handle agent selection
+  const handleSelectAgent = useCallback((agent: Agent) => {
+    setSelectedAgent(agent);
+    setCurrentAgentPrompt(agent.prompt); // Reset to default prompt on agent switch
+  }, []);
 
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isLoading) return;
@@ -25,6 +38,7 @@ export function useChat() {
     setIsLoading(true);
 
     let assistantContent = "";
+    let assistantMessageId = crypto.randomUUID();
 
     const updateAssistant = (chunk: string) => {
       assistantContent += chunk;
@@ -38,7 +52,7 @@ export function useChat() {
         return [
           ...prev,
           {
-            id: crypto.randomUUID(),
+            id: assistantMessageId,
             role: "assistant",
             content: assistantContent,
             timestamp: new Date(),
@@ -62,7 +76,7 @@ export function useChat() {
         body: JSON.stringify({
           messages: chatMessages,
           model: selectedModel,
-          agentPrompt: selectedAgent.prompt,
+          agentPrompt: currentAgentPrompt, // Use current (possibly improved) prompt
         }),
       });
 
@@ -97,13 +111,25 @@ export function useChat() {
 
           try {
             const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content;
-            if (content) updateAssistant(content);
+            const contentChunk = parsed.choices?.[0]?.delta?.content;
+            if (contentChunk) updateAssistant(contentChunk);
           } catch {
             textBuffer = line + "\n" + textBuffer;
             break;
           }
         }
+      }
+
+      // Log conversation for self-improvement
+      if (assistantContent) {
+        supabase.from("conversation_logs").insert({
+          agent_id: selectedAgent.id,
+          user_message: content.trim(),
+          assistant_response: assistantContent,
+          model_used: selectedModel,
+        }).then(({ error }) => {
+          if (error) console.error("Error logging conversation:", error);
+        });
       }
     } catch (error) {
       console.error("Chat error:", error);
@@ -112,12 +138,11 @@ export function useChat() {
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to send message",
       });
-      // Remove the user message if we failed
       setMessages((prev) => prev.filter((m) => m.id !== userMessage.id));
     } finally {
       setIsLoading(false);
     }
-  }, [messages, selectedModel, selectedAgent, isLoading, toast]);
+  }, [messages, selectedModel, selectedAgent, currentAgentPrompt, isLoading, toast]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);
@@ -128,8 +153,10 @@ export function useChat() {
     isLoading,
     selectedModel,
     selectedAgent,
+    currentAgentPrompt,
     setSelectedModel,
-    setSelectedAgent,
+    setSelectedAgent: handleSelectAgent,
+    updateAgentPrompt,
     sendMessage,
     clearMessages,
   };

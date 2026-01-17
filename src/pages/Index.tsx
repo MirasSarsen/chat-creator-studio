@@ -11,6 +11,7 @@ const Index = () => {
     selectedAgent,
     setSelectedModel,
     setSelectedAgent,
+    updateAgentPrompt,
     sendMessage,
     clearMessages,
   } = useChat();
@@ -33,6 +34,7 @@ const Index = () => {
           clearMessages();
         }}
         onNewChat={clearMessages}
+        onPromptUpdate={updateAgentPrompt}
       />
 
       {/* Main Chat Area */}
